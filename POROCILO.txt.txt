@@ -1,0 +1,88 @@
+
+3. Kaj so prednosti in kaj slabosti interpolacije niètega reda? 
+______________________________________________________________________________________
+
+/.../Interpolacija reda 0 priredi toèki (x, y) sivinsko vrednost
+najbližje toèke na diskretni mreži vzorènih toèk./.../
+    
+    [PREDNOST: hitra evalvacija]   
+
+Interpolacija reda 0 se hitreje evalvira:
+generira edino tiste vrednosti pixlov,
+ki že nastopajo v prvotni sliki.
+
+/../ Interpolacija reda 0 je hitro izraèunljiva,
+vendar nezvezna v toèkah, ki so od vzorènih toèk enako oddaljene./../
+    
+    [SLABOST: pixelacija/artefakti]
+    
+Torej, èe išèem sivinsko vrednost v (x, y) in
+je sluèajno ta toèka med štirimi drugimi ravno na sredi bo tam obdelava nezvezna/sekana.
+
+Na pogled postane slika polna blokov, kjer bi sicer naj imela lepe linije.
+Slika se zdi nerazloèna in neprijetno nazobèana - je polna artefaktov.
+______________________________________________________________________________________
+
+
+
+Kaj so prednosti in slabosti interpolacije prvega reda? 
+______________________________________________________________________________________
+
+    [PREDNOST: evalvirana slika brez artefaktov interpolacije reda 0]
+
+Interpolacija reda 1 odpravlja slabosti interpolacije reda 0, ker
+sivinsko vrednost toèke doloèa kot utež sosednjih štirih vzorènih toèk,
+s èimer postane zvezna povsod.
+Slika obmoèja postane gladkejša, brez artefaktov: 
+bolj je razloèna in bolj prijetno - nenazobano deluje.
+
+    [SLABOST: navidezna zveznost & manjši kontrast => popaèenje]
+
+Ista rutina naredi sliko zvezno po celi domeni, medtem ko ostane nezvezna
+na meji diskretne mreže. Slika nastane zvezna tudi tam, kjer v resnici ni.
+Izgubi informacijo jasnih robov - ima manjši kontrast:
+razlika med temnim in svetlim je tudi zvezna; slika se popaèi!
+______________________________________________________________________________________
+
+
+
+Kaj dosežemo z interpolacijami višjih redov? 
+npr. z interpolacijo drugega reda (bikubièna interpolacija)?
+______________________________________________________________________________________
+
+V kolikor je nujna zveznost odvodov na vsej diskretni mreži, 
+potem je nujna interpolacija višjega reda.
+
+Bikubièna npr. utež raèuna kot polinomsko vsoto,
+"spline" interpolacije pa s pomoèjo polinoma med parom sosednjih toèk. 
+
+Z interpolacijo reda 2 ali 3 se slika zdi še bolj zvezna,
+bolj gladka: zvezna je po mejah in po celi diskretni mreži.
+Slika torej pridobi na kvaliteti.
+
+Vse to pomeni, da poteka bolj zahteven izraèun.
+Posledièno rabi veè procesorskega èasa in sredstev za evalvacijo.
+______________________________________________________________________________________
+
+
+
+4. Naštejte nekaj primerov, kjer potrebujemo uèinkovito interpolacijo slik.
+______________________________________________________________________________________
+/.../ Interpolacijo uporabljamo pri številnih postopkih prikazovanja in preslikovanja slik,
+kot so tvorjenje prerezov, projekcij in upodobitev, poveèevanje slik s poveèevanjem vzorène frekvence,
+pri ponovnem enakomernem vzorèenju slik, zajetih z neenakomernim vzorèenjem po posameznih koordinatah, 
+ter pri geometrijskih preslikavah slik./.../
+
+    1) sliko poveèaj brez, da bi prikrajšal kvaliteto: premajhna slika, ne vidi se dobro ==> zoom in & poglej  (?)  [POVEÈAVA]
+    
+    2) prerez slike: prirezana slika - spremenjena geometrija  (?) [LINIJSKI PREREZ]
+
+    3) (?) :c [ENAKOMERNO VZORÈENJE]
+    
+    4) zavrti sliko, brez artefaktov ==> vsaj interpolacija 1. reda!  (?) [PRESLIKAVA]
+    
+- vrtenje slike, brez artefaktov
+- odpravljanje artefaktov/ ogled brez šuma
+- dodajanje raznih efektov (vrtinec, filter ...)
+- poveèanje slike, brez izgube kvalitete
+______________________________________________________________________________________
