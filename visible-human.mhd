@@ -1,0 +1,6 @@
+NDims = 3
+DimSize = 193 143 82
+ElementType = MET_UCHAR
+ElementSpacing = 1.0 1.0 1.0
+ElementByteOrderMSB = False
+ElementDataFile = visible-human-143x082x193-08bit.raw
