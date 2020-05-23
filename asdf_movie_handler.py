@@ -51,6 +51,101 @@ def loadImage(iPath, iSize, iType):
     fid.close()
     return oImage
 
+
+
+# Statistično filtriranje.
+
+def statisticalFiltering(iImage, iLength, iFunc):
+
+    # inicializacija filtrirane slike in dolžine jedra filtra
+
+    oImage = np.zeros_like(iImage)
+
+    n = int((iLength-1)/2)
+
+    # razširi slikovno domeno
+
+    iImage_padded = np.pad(iImage, n, mode='edge')
+
+    # filtriranje slike
+
+    for y in range(iImage.shape[0]):
+
+        for x in range(iImage.shape[1]):
+
+            iArea = iImage_padded[y:y+2*n+1, x:x+2*n+1]
+    
+            oImage[y, x] = iFunc(iArea)
+    
+    return oImage
+
+
+
+
+
+# Razteg dinamičnega območja slike na 8 bitov
+
+def scale2range(iImage):
+
+    oImage = 255/(iImage.max()-iImage.min()) * (iImage - iImage.min())
+
+    return oImage
+
+
+
+# vrni jedro Gauss filtra pri poljubni sigmi
+
+def gauss_jedro_filtra(dimenzija, sigma):
+    
+    m,n = [(ss - 1.) / 2. for ss in dimenzija]
+    
+    y,x = np.ogrid[-m:m+1, -n:n+1]
+    
+    h = np.exp( -(x*x + y*y) / (2.*sigma*sigma) )
+    
+    h[ h < np.finfo(h.dtype).eps*h.max() ] = 0
+   
+    sumh = h.sum()
+    
+    if sumh != 0:
+        
+        h /= sumh
+  
+    return h
+
+
+
+# Prostorsko filtriranje slike z jedrom.
+
+def kernelFiltering(iImage, iKernel):
+
+    # inicializacija filtrirane slike in dolžine jedra filtra
+    
+    oImage = np.zeros_like(iImage, dtype=np.float)
+    
+    n = int((iKernel.shape[0]-1)/2)
+    
+    # razširi slikovno domeno
+    
+    iImage_padded = np.pad(iImage, n, mode='edge')
+    
+    # priredi jedro za konvolucijo
+    
+    iKernel = np.rot90(iKernel, 2)
+    
+    # filtriranje slike
+    
+    for y in range(iImage.shape[0]):
+    
+        for x in range(iImage.shape[1]):
+        
+            iArea = iImage_padded[y:y+2*n+1, x:x+2*n+1]
+            
+            oImage[y, x] = np.sum(iKernel * iArea)
+    
+    return oImage
+
+
 #Določanje osnovnega ravninskega prereza.
 
 def getCrossSection(iImage, iPlane, iNum):
